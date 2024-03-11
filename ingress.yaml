@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mainlb
+  namespace: ingress-nginx
+  annotations:
+    #nginx.ingress.kubernetes.io/enable-cors: "true"
+    #nginx.ingress.kubernetes.io/cors-allow-origin: "https://172.212.123.17"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/scheme: internet-facing
+    nginx.ingress.kubernetes.io/target-type: ip
+    nginx.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: 
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 8080
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 3000
