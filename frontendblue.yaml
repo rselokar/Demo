@@ -1,29 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: frontend-blue
   namespace: ingress-nginx
   labels:
     role: frontend
     env: demo
+    app: blue
 spec:
   replicas: 2
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 25%
   selector:
     matchLabels:
       role: frontend
+      app: blue
   template:
     metadata:
       labels:
         role: frontend
+        app: blue
     spec:
       containers:
       - name: frontend
-        image: public.ecr.aws/e3i3d3z5/three-tier-frontend-d:latest
+        image: selokarr/frontendb:latest
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
@@ -35,7 +33,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend
+  name: blue-frontend
   namespace: ingress-nginx
 spec:
   ports:
@@ -43,4 +41,5 @@ spec:
     protocol: TCP
   type: ClusterIP
   selector:
-   role: frontend      
+   role: frontend 
+   app: blue     

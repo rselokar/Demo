@@ -1,29 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: backend-green
   namespace: ingress-nginx
   labels:
     role: backend
     env: demo
+    deployment: green
 spec:
   replicas: 2
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 25%
   selector:
     matchLabels:
       role: backend
+      deployment: green
   template:
     metadata:
       labels:
         role: backend
+        deployment: green
     spec:
       containers:
       - name: backend
-        image: public.ecr.aws/w8u5e4v2/workshop-backend:v1
+        image: selokarr/backend:latest
         imagePullPolicy: Always
         env:
           - name: MONGO_CONN_STR
@@ -59,7 +57,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend
+  name: green-backend
   namespace: ingress-nginx
 spec:
   ports:
@@ -68,3 +66,4 @@ spec:
   type: ClusterIP
   selector:
    role: backend
+   deployment: green
