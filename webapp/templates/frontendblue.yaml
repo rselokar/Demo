@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-blue
+  namespace: {{.Values.name}}
+  labels:
+    role: frontend
+    env: demo
+    app: blue
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      role: frontend
+      app: blue
+  template:
+    metadata:
+      labels:
+        role: frontend
+        app: blue
+    spec:
+      containers:
+      - name: frontend
+        image: selokarr/frontendb:latest
+        imagePullPolicy: Always
+        env:
+          - name: REACT_APP_BACKEND_URL
+            value: "http://172.212.123.17/api/tasks" 
+        ports:
+        - containerPort: 3000
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: blue-frontend
+  namespace: {{.Values.name}}
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+  type: ClusterIP
+  selector:
+   role: frontend 
+   app: blue     

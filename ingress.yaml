@@ -20,13 +20,13 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: blue-backend
+                name: green-backend
                 port:
                   number: 8080
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: blue-frontend
+                name: green-frontend
                 port:
                   number: 3000
